@@ -46,11 +46,22 @@ def convert_to_json(data):
 # Function to fetch balance sheet as JSON for single ticker
 def get_balance_sheet_as_json(ticker_symbol, **kwargs):
     try:
+        print(f"Fetching data for {ticker_symbol}")  # Debug log
         my_data = yf.Ticker(ticker_symbol)
+        print("Ticker object created")  # Debug log
+        
         my_balance_sheet = my_data.balance_sheet
+        print(f"Balance sheet data: {my_balance_sheet}")  # Debug log
+        
+        if my_balance_sheet is None or my_balance_sheet.empty:
+            print("Empty balance sheet received")  # Debug log
+            return json.dumps({"error": "No balance sheet data available"}, indent=4)
+            
         balance_sheet_json = convert_data_to_json(my_balance_sheet)
+        print(f"Converted JSON: {balance_sheet_json}")  # Debug log
         return balance_sheet_json
     except Exception as e:
+        print(f"Error in get_balance_sheet_as_json: {str(e)}")  # Debug log
         return json.dumps({"error": str(e)}, indent=4)
 
 # Function to fetch cash flow as JSON for single ticker

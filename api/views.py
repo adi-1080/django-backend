@@ -11,9 +11,18 @@ def index(request):
 @api_view(["GET"])
 def get_balance_sheet(request, ticker):
     try:
+        print(f"View: Fetching balance sheet for {ticker}")  # Debug log
         final_json_file = get_balance_sheet_as_json(ticker)
-        return Response(final_json_file)
+        
+        # Parse the JSON string to check if it's empty or contains an error
+        parsed_data = json.loads(final_json_file)
+        if not parsed_data or "error" in parsed_data:
+            print(f"View: Empty or error in data: {parsed_data}")  # Debug log
+            return Response(parsed_data, status=404)
+            
+        return Response(parsed_data)
     except Exception as e:
+        print(f"View: Error {str(e)}")  # Debug log
         return Response({"error": str(e)}, status=500)
 
 @api_view(["GET"])
