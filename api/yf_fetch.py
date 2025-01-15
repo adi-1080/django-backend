@@ -2,6 +2,15 @@ import yfinance as yf
 import pandas as pd
 import json
 from datetime import datetime
+import time
+
+# Configure yfinance with custom headers
+yf.pdr_override()
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+yf.set_headers(headers)
+
 
 # Helper Functions
 def convert_timestamps_to_strings(data):
@@ -82,6 +91,7 @@ def get_sector_and_industry(tickers, **kwargs):
 
     result = {}
     for ticker in tickers:
+        time.sleep(1)
         info = yf.Ticker(ticker).info
         sector = info.get("sector", "N/A")
         industry = info.get("industry", "N/A")
